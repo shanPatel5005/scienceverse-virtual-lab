@@ -24,6 +24,7 @@ jobs:
           cache: npm
       - run: npm install
       - run: npm run build:web
+      - run: cp manifest.webmanifest icon.svg sw.js dist/ 2>/dev/null || true
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
