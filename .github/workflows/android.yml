@@ -1,12 +1,13 @@
-name: ScienceVerse Android APK
+name: Build ScienceVerse Android APK
 on:
   workflow_dispatch:
   push:
+    branches: [main]
     paths:
+      - 'src/**'
       - 'index.html'
-      - 'manifest.webmanifest'
-      - 'icon.svg'
       - 'package.json'
+      - 'manifest.webmanifest'
       - 'capacitor.config.ts'
       - '.github/workflows/android.yml'
 jobs:
@@ -19,14 +20,16 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm install
-      - run: mkdir -p dist && cp index.html manifest.webmanifest icon.svg dist/ && cp sw.js dist/
+      - run: npm run build:web
       - run: npx cap add android
       - run: npx cap sync android
+      - uses: android-actions/setup-android@v3
+      - run: yes | sdkmanager --licenses >/dev/null || true
       - name: Build debug APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: ScienceVerse-debug-apk
+          name: ScienceVerse-Android-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
