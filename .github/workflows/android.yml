@@ -7,7 +7,9 @@ on:
       - 'src/**'
       - 'index.html'
       - 'package.json'
+      - 'vite.config.js'
       - 'manifest.webmanifest'
+      - 'icon.svg'
       - 'capacitor.config.ts'
       - '.github/workflows/android.yml'
 jobs:
@@ -21,6 +23,7 @@ jobs:
           cache: npm
       - run: npm install
       - run: npm run build:web
+      - run: cp manifest.webmanifest icon.svg sw.js dist/ 2>/dev/null || true
       - run: npx cap add android
       - run: npx cap sync android
       - uses: android-actions/setup-android@v3
