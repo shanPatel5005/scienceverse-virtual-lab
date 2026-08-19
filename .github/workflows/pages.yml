@@ -22,9 +22,14 @@ jobs:
         with:
           node-version: 20
           cache: npm
-      - run: npm install
-      - run: npm run build:web
-      - run: cp manifest.webmanifest icon.svg sw.js dist/ 2>/dev/null || true
+      - name: Install dependencies
+        run: npm install
+      - name: Build web app
+        run: npm run build:web
+      - name: Copy public runtime files
+        run: cp manifest.webmanifest icon.svg sw.js dist/ 2>/dev/null || true
+      - name: Validate build output
+        run: test -f dist/index.html && test -s dist/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
